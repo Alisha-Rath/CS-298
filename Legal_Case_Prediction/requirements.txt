@@ -1,0 +1,15 @@
+Flask
+pickle-mixin==1.0.2
+peft==0.4.0  # Pin the version of peft
+numpy>=1.20.0,<2.0.0  # More specific NumPy version range
+torch==2.0.1  # Specify the version of torch
+transformers==4.31.0
+joblib
+shap
+matplotlib==3.7.1
+transformers_interpret
+protobuf
+ipywidgets
+tiktoken==0.4.0
+sentencepiece
+xgboost==1.7.3
