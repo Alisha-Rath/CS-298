@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #37474f;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-button {
+            background-color: #5c6bc0;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .toggle-button:hover {
+            background-color: #3f4e9f;
+        }
+
+        .toggle-section {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fafafa;
+        }
+
+        h2, h3 {
+            color: #455a64;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #e3f2fd;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: white;
+            background: #d32f2f;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background: #b71c1c;
+        }
+
+        /* Adjust the size of the SHAP plot */
+        .shap-container img {
+            max-width: 100%;  /* Ensures plot doesn't exceed container width */
+            height: auto;     /* Maintain aspect ratio */
+            border-radius: 8px;
+        }
+
+        /* Responsive layout for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction Result</h1>
+        <p><strong>Prediction:</strong> {{ prediction }}</p>
+
+        <button class="toggle-button" onclick="toggleDetails()">Show Details</button>
+
+        <div class="toggle-section" id="shap-details">
+            <h2>SHAP Explanation</h2>
+            <div>
+                <h3>Word Impacts (sorted by absolute SHAP value):</h3>
+                <ul>
+                    {% for word, value, direction in word_impacts %}
+                        <li>Word: '{{ word }}', SHAP Value: {{ value | round(4) }} ({{ direction }})</li>
+                    {% endfor %}
+                </ul>
+
+                <h3>Summary of Word Impacts:</h3>
+                <p><strong>Average Positive Impact:</strong> {{ avg_positive | round(4) }}</p>
+                <p><strong>Average Negative Impact:</strong> {{ avg_negative | round(4) }}</p>
+            </div>
+
+            {% if shap_html %}
+                <h3>SHAP Plot</h3>
+                <div class="shap-container">
+                    {{ shap_html|safe }}
+                </div>
+            {% endif %}
+        </div>
+
+        <a href="/">Go Back</a>
+    </div>
+
+    <script>
+        function toggleDetails() {
+            var shapDetails = document.getElementById('shap-details');
+            var toggleButton = document.querySelector('.toggle-button');
+            
+            if (shapDetails.style.display === "none" || shapDetails.style.display === "") {
+                shapDetails.style.display = "block";
+                toggleButton.textContent = "Hide Details";
+            } else {
+                shapDetails.style.display = "none";
+                toggleButton.textContent = "Show Details";
+            }
+        }
+    </script>
+</body>
+</html>
