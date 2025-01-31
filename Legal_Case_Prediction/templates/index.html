@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+            text-align: left;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #llm_peft_div, #classifier_div {
+            margin-top: 10px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .radio-group label {
+            margin: 0;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .loading-text {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .thinking {
+            font-size: 24px;
+            color: #28a745;
+        }
+        .spinner {
+            margin-top: 10px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #28a745;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Model Prediction</h1>
+    <form action="/predict" method="POST" id="prediction-form">
+        <label for="model_type">Model Type:</label>
+        <div class="radio-group">
+            <input type="radio" name="model_type" value="LLM and PEFT" checked>
+            <label for="llm_peft">Fine-tuned</label>
+            <input type="radio" name="model_type" value="Classifier">
+            <label for="classifier">Classifier</label>
+        </div>
 
+        <div id="llm_peft_div">
+            <label for="llm">LLM:</label>
+            <select name="llm">
+                <option value="deberta">DeBERTa-v3-small</option>
+                <option value="distilbert">DistilBERT-uncased</option>
+            </select>
+            <label for="peft">PEFT:</label>
+            <select name="peft">
+                <option value="lora">LoRA</option>
+                <option value="lora">DoRA</option>
+                <option value="qlora">QLoRA</option>
+            </select>
+        </div>
+
+        <div id="classifier_div" style="display:none;">
+            <label for="classifier">Classifier:</label>
+            <select name="classifier">
+                <option value="xgboost">XGBoost</option>
+            </select>
+        </div>
+
+        <label for="name">Name:</label>
+        <input type="text" name="name">
+        <label for="first_party">First Party:</label>
+        <input type="text" name="first_party" required>
+        <label for="second_party">Second Party:</label>
+        <input type="text" name="second_party" required>
+        <label for="majority_vote">Majority Vote:</label>
+        <input type="number" name="majority_vote" value="0" min="0">
+        <label for="minority_vote">Minority Vote:</label>
+        <input type="number" name="minority_vote" value="0" min="0">
+        <label for="decision_type">Decision Type:</label>
+        <input type="text" name="decision_type">
+        <label for="disposition">Disposition:</label>
+        <input type="text" name="disposition">
+        <label for="issue_area">Issue Area:</label>
+        <input type="text" name="issue_area">
+        <label for="facts">Facts:</label>
+        <textarea name="facts" required></textarea>
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="loading">
+        <div class="loading-text">Judge is thinking...</div>
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        document.querySelectorAll('input[name="model_type"]').forEach(function(radio) {
+            radio.addEventListener("change", function() {
+                if (radio.value === "LLM and PEFT") {
+                    document.getElementById("llm_peft_div").style.display = "block";
+                    document.getElementById("classifier_div").style.display = "none";
+                } else {
+                    document.getElementById("llm_peft_div").style.display = "none";
+                    document.getElementById("classifier_div").style.display = "block";
+                }
+            });
+        });
+
+        // Show loading animation when the form is submitted
+        document.getElementById('prediction-form').addEventListener('submit', function() {
+            document.getElementById('loading').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
