@@ -104,7 +104,7 @@
             <label for="llm">LLM:</label>
             <select name="llm">
                 <option value="deberta">DeBERTa-v3-small</option>
-                <option value="distilbert">DistilBERT-uncased</option>
+                <option value="distilbert">DistilBERT-base-uncased</option>
             </select>
             <label for="peft">PEFT:</label>
             <select name="peft">
@@ -137,8 +137,10 @@
         <input type="text" name="disposition">
         <label for="issue_area">Issue Area:</label>
         <input type="text" name="issue_area">
+        <label for="chief_justice">Chief Justice:</label>
+        <input type="text" name="chief_justice">
         <label for="facts">Facts:</label>
-        <textarea name="facts" required></textarea>
+        <textarea name="facts"></textarea>
         <button type="submit">Predict</button>
     </form>
 
