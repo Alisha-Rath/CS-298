@@ -341,13 +341,14 @@ def predict():
         decision_type = request.form["decision_type"]
         disposition = request.form["disposition"]
         issue_area = request.form["issue_area"]
+        chief_justice = request.form["chief_justice"]
         facts = request.form["facts"]
         model_type = request.form["model_type"]
         llm = request.form.get("llm", None)
         peft = request.form.get("peft", None)
         classifier = request.form.get("classifier", None)
 
-        if not all([first_party, second_party, facts]):
+        if not all([first_party, second_party]):
             return "Error: All input fields must be filled."
         # Process based on model type
         if model_type == 'LLM and PEFT':
@@ -362,7 +363,7 @@ def predict():
                 model = model.to(device)
 
                 # Create the input text for the model
-                input_text = f"{name} {first_party} {second_party} {majority_vote} to {minority_vote} {decision_type} {disposition}  {issue_area} {facts}"
+                input_text = f"{name} {first_party} {second_party} {majority_vote} to {minority_vote} {decision_type} {disposition}  {issue_area} {facts} {chief_justice}"
 
                 #pre_process input
                 input_text = preprocess_text(input_text)
@@ -397,7 +398,7 @@ def predict():
             try:
                 model = joblib.load(f"models/classifier/{classifier}_model.joblib")
                 tfidf_vectorizer = joblib.load("models/classifier/tfidf_vectorizer.joblib")
-                input_text = f"{name} {first_party} {second_party} {majority_vote} to {minority_vote} {decision_type} {disposition}  {issue_area} {facts}"
+                input_text = f"{name} {first_party} {second_party} {majority_vote} to {minority_vote} {decision_type} {disposition}  {issue_area} {facts} {chief_justice}"
                 #pre_process input
                 input_text = preprocess_text(input_text)
                 print(input_text)
